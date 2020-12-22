@@ -1,0 +1,93 @@
+<div class="row m-2">
+  <div class="col-md-3 col-sm-12">
+    <div class="card m-2">
+      <div class="card-heading">
+        <h4 class="text-center my-3">ADD USER INFROMATION</h4>
+      </div>
+      <div class="p-3">
+        <form [formGroup]="userInformationForm">
+          <label>Name</label>
+          <input class="form-control" formControlName="name" name="name" placeholder="please enter your name">
+          <div *ngIf="userInformationForm.controls.name.errors && userInformationForm.controls.name.touched">
+            <p class="text-danger ml-2" *ngIf="userInformationForm.controls.name.errors.required">Name is requried</p>
+          </div>
+          <label>Age</label>
+          <select class="form-control" formControlName="age">
+            <option hidden selected value="">--select age--</option>
+            <option value="18">18</option>
+            <option value="19">19</option>
+            <option value="20">20</option>
+            <option value="21">21</option>
+            <option value="22">22</option>
+          </select>
+          <div *ngIf="userInformationForm.controls.age.errors && userInformationForm.controls.age.touched">
+            <p class="text-danger ml-2" *ngIf="userInformationForm.controls.age.errors.required">age is requried</p>
+          </div>
+          <label>Gender</label>
+          <div>
+            <input type="radio"  formControlName="gender" name="gender" class="m-2" value="male">Male
+            <input type="radio"  formControlName="gender" name="gender"  class="m-2" value="Female">Female
+          </div>
+          <div *ngIf="userInformationForm.controls.gender.errors && userInformationForm.controls.gender.touched">
+            <p class="text-danger ml-2" *ngIf="userInformationForm.controls.gender.errors.required">age is requried</p>
+          </div>
+  
+          <div class="row my-2">
+            <label>Hobbies</label>
+          </div>
+         
+          <div formArrayName="hobbies" *ngFor="let hobby of userInformationForm.get('hobbies').controls let index=index">
+            <div [formGroupName]="index">
+              <div class="d-flex">
+                <input class="form-control" formControlName="hobby">
+                <button class="btn btn-circle-skin btn-transparent-theme ml-3" *ngIf="index==0" (click)="addHobbyToArray()"><i class="fa fa-plus"></i></button>
+                <button class="btn btn-circle-skin btn-transparent-theme ml-3" *ngIf="index>0" (click)="deleteHobbyFromArray(index)"><i class="fa fa-minus"></i></button>
+              </div>
+            </div>
+          </div>
+
+          <div class="my-5">
+            <input type="checkbox" formControlName="checked" (click)="validate($event)"> All the information are verified
+          </div>
+         
+          <button class="btn dark-background btn-skin" (click)="addInformation()" [disabled]="userInformationForm.invalid">Add</button>
+          <button class="btn dark-background btn-skin" (click)="resetForm()">Reset</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-9 col-sm-12">
+    <div class="card my-2">
+      <div class="card-heading my-3">
+        <h4 class="ml-3">USER LIST</h4>
+      </div>
+      <div class="row p-2">
+        <input class="ml-auto" [(ngModel)]="searchItem" placeholder="search by name">
+      </div>
+      <div class="p-2 table-responsive">
+        <table class="table table-bordered">
+          <thead class="dark-background">
+            <th>Name</th>
+            <th>Age</th>
+            <th>Gender</th>
+            <th>Hobbies</th>
+            <th>Action</th>
+          </thead>
+          <tbody>
+            <tr *ngFor="let information of userInformationArray|search:searchItem let index=index">
+              <td>{{information.name}}</td>
+              <td>{{information.age}}</td>
+              <td>{{information.gender}}</td>
+              <td>
+                <p *ngFor="let hobby of information.hobbies">{{hobby.hobby}}</p>
+              </td>
+              <td><a (click)="deleteRecordFromArray(index)" class="cursor">Delete</a></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      
+    </div>
+  </div>
+</div>
